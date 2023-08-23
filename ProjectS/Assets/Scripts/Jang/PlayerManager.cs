@@ -5,9 +5,13 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-
-    public Collider[] AttackHitBoxes;
     
+    public Collider[] AttackHitBoxes;
+
+    int Player_hp;
+
+    
+
     void Start()
     {
        
