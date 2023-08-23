@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using static UnityEditor.PlayerSettings;
 
-public class PlayerController : Entity
+public class CharacterController : Entity
 {
     [Header("movingSetting")]
     [SerializeField]
