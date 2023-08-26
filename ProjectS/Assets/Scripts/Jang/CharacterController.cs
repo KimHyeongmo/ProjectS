@@ -1,46 +1,49 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static UnityEditor.PlayerSettings;
 
 public class CharacterController : Entity
 {
-    [Header("movingSetting")]
-    [SerializeField]
-    public float MaxSpeed;
-    [SerializeField]
-    public float JumpForce;
-    [Header("overlapSetting")]
-    [SerializeField]
-    private Transform groundCheck;
-    [SerializeField]
-    private Vector3 boxSize;
-    [SerializeField]
-    private LayerMask groundLayer;
-    [Header("wallActSetting")]
-    [SerializeField]
-    private Transform wallCheck;
-    [SerializeField]
-    private LayerMask wallLayer;
-    
     Rigidbody rigid;
-
     private float horizontal;
-    //the direction the player is looking
-    private bool isFacingRight = true;
-    //variable to store the position of the previous frame
-    private Vector3 prevPosition;
-
-    private bool isFancingRight = true;
-    private float wallSlidingSpeed;
+    private int nroPulos = 1;
+    private bool isGrounded;
+    private bool isTouchingWall;
     private bool isWallSliding;
-    /* int Player_hp;
+    private bool iscanMove = true;
+    private bool isFacingRight = true;  //the direction the player is looking
+    private int facingDirection = 1;
+    private Vector3 prevPosition; //variable to store the position of the previous frame
 
-     private void Start()
-     {
-         Player_hp = this.hp;
-     }*/
+
+    [Header("Parametros Player")]
+    [SerializeField] public float speed;
+    [SerializeField] public float jumpForce;
+    [SerializeField] public float wallSlidingSpeed;
+
+    [Header("Parametros Colisores")]
+    public Transform feetPos;
+    public Transform wallCheck;
+    public Vector3 groundcheckSize;
+    public Vector3 wallcheckSize;
+    public LayerMask whatIsGround;
+    public LayerMask whatIsWall;
+
+    [Header("Parametros Wall Jump")]
+    public float wallJumpForce;
+    public Vector3 wallJumpDirection;
+
+    int Player_hp;
+
+    private void Start()
+    {
+        Player_hp = this.hp;
+    }
 
     void Awake()
     {
@@ -49,82 +52,151 @@ public class CharacterController : Entity
 
     private void Update()
     {
-        horizontal = Input.GetAxisRaw("Horizontal");
+        CheckSurroundings();
+        CheckInput();
+        CheckWallSliding();
+        CheckJump();
 
-        if (Input.GetButtonDown("Jump") && IsGrounded())
-        {
-            rigid.velocity = new Vector3(rigid.velocity.x, JumpForce);
-        }
-
-        if (Input.GetButtonUp("Jump") && rigid.velocity.y > 0f)
-        {
-            rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * 0.5f);
-        }
-
-        WallSlide();
-
-        /*
-        if(Player_hp > this.hp)
+        if (Player_hp > this.hp)
         {
             Debug.Log("Player got damaged");
             Ondamaged();
         }
-        if(this. hp <= 0)
+        if (this.hp <= 0)
         {
             Debug.Log("Dead");
         }
 
         Player_hp = this.hp;
-        */
 
 
     }
-    /*void Ondamaged()
+
+    void CheckSurroundings()
     {
-    /
-    // 무적방식 1=> layer의 변경을 통한 무적 but entity를 통해 hp를 받으니 방법 변경 필요
-    // + 맞았을때 어디가 맞았는지의 방향을 알아야함
+        //isGrounded
+        Collider[] colliderg = Physics.OverlapBox(feetPos.position, groundcheckSize, Quaternion.identity ,whatIsGround);
+        isGrounded = colliderg.Length > 0;
+        //isWalled
+        Collider[] colliderw = Physics.OverlapBox(wallCheck.position, wallcheckSize, Quaternion.identity, whatIsWall);
+        isTouchingWall = colliderw.Length > 0;
+    }
+    void Ondamaged()
+    {
+        // 무적방식 1=> layer의 변경을 통한 무적 but entity를 통해 hp를 받으니 방법 변경 필요
+        // + 맞았을때 어디가 맞았는지의 방향을 알아야함
         // Layer Change
         gameObject.layer = 10;
-        
+
         // Dameged Reaction
-        
-        rigid.AddForce(new Vector3(1, 1)*7, ForceMode.Impulse);
-    
+
+        rigid.AddForce(new Vector3(1, 1) * 7, ForceMode.Impulse);
+
         //Layer Backed
-        Invoke("OffDamaged",1);
+        Invoke("OffDamaged", 1);
     }
 
-     void OffDamaged()
+    void OffDamaged()
     {
-        gameObject.layer = 10; 이거는 attacted 변경으로 수정할 생각입니다.
-    }
-     
-     */
-
-    void FixedUpdate()
-    { 
-        //Moving
-        MovePlayer();
-
-        IsWalled();
+        gameObject.layer = 10;
     }
 
+    void CheckJump()
+    {
+        if (isGrounded && rigid.velocity.y <= 0)
+        {
+            nroPulos = 1;
+        }
+    }
 
-   
-    
+    void CheckInput()
+    {
+        if (iscanMove)
+        {
+            MovePlayer();
+        }
 
-    void MovePlayer() {
-        // horizontal moving
-        rigid.AddForce(Vector3.right * horizontal, ForceMode.Impulse);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            JumpPlayer();
+        }
+    }
 
-        if (rigid.velocity.x > MaxSpeed)
-            rigid.velocity = new Vector3(MaxSpeed, rigid.velocity.y);
-        else if (rigid.velocity.x < MaxSpeed * (-1))
-            rigid.velocity = new Vector3(MaxSpeed*(-1), rigid.velocity.y);
+    private void CheckWallSliding()
+    {
+        if (isTouchingWall && !isGrounded && rigid.velocity.y < 0 && horizontal != 0)
+        {
+            isWallSliding = true;
+            Invoke("",0.3f);
+        }
+        else
+        {
+            isWallSliding = false;
+        }
+    }
+
+    void JumpPlayer()
+    {
+        // Pulo normal
+        if (nroPulos > 0 && !isWallSliding && isGrounded)
+        {
+            nroPulos = 0;
+            rigid.velocity = Vector3.zero;
+            rigid.AddForce(Vector3.up * jumpForce);
+            nroPulos = 0;
+        }
+        //wall Jump
+        else if (isWallSliding)
+        {
+
+            // x = force * x * (-1 or 1 - Left or right)
+            // y = force * y (always upwards)
+            Vector3 force = new Vector3(wallJumpForce * wallJumpDirection.x * -facingDirection, wallJumpForce * wallJumpDirection.y);
+
+            // Clear the velocity before assigning to prevent velocity accumulation
+            rigid.velocity = Vector3.zero;
+
+            // Apply the force for Wall Jump
+            rigid.AddForce(force, ForceMode.Impulse);
+
+            // Temporarily regain control of the character
+            StartCoroutine("StopMove");
+        }
+    }
+
+    IEnumerator StopMove()
+    {
+        // Remove control from the character
+        iscanMove = false;
+        // Flip the transform side
+        transform.localScale = transform.localScale.x == 1 ? new Vector3(-1, 1,0) : Vector3.one;
+
+        yield return new WaitForSeconds(.3f);
+
+        // Normalize the transform side
+        transform.localScale = Vector3.one;
+        // Restore control to the character
+        iscanMove = true;
+    }
 
 
-        if ((horizontal > 0 && !isFacingRight) || (horizontal < 0 && isFacingRight))
+    private void MovePlayer()
+    {
+        horizontal = Input.GetAxisRaw("Horizontal");
+        if (!(isWallSliding ))
+        {
+            rigid.velocity = new Vector3(horizontal * speed, rigid.velocity.y);
+        }
+
+        if (isWallSliding)
+        {
+            if (rigid.velocity.y < -wallSlidingSpeed)
+            {
+                rigid.velocity = new Vector3(rigid.velocity.x, -wallSlidingSpeed);
+            }
+        }
+
+        if ((horizontal < 0 && isFacingRight) || (horizontal > 0 && !isFacingRight))
         {
             // Flip character if direction changes
             FlipCharacter();
@@ -138,49 +210,17 @@ public class CharacterController : Entity
     void FlipCharacter()
     {
         // reverse direction
-        isFacingRight = !isFacingRight; 
-        Vector3 theScale = transform.localScale;
-        // invert the x scale value
-        theScale.x *= -1; 
-        transform.localScale = theScale;
-    }
-
-    private bool IsGrounded()
-    {
-        Collider[] colliders = Physics.OverlapBox(groundCheck.position,boxSize, Quaternion.identity ,groundLayer);
-        return colliders.Length > 0;
-    }
-
-    private bool IsWalled()
-    {
-        if(rigid.velocity.y < 0f)
-        {
-            Debug.DrawRay(rigid.position, Vector3.down, new Color(0, 1 ,0));
-            RaycastHit rayHit;
-            if (Physics.Raycast(rigid.position, Vector3.down, out rayHit, 1, wallLayer))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void WallSlide()
-    {
-        if(IsWalled() && !IsGrounded() && horizontal != 0f)
-        {
-            isWallSliding = true;
-            rigid.velocity = new Vector3(rigid.velocity.x, -wallSlidingSpeed);
-        }
-        else
-        {
-            isWallSliding=false;
-        }
+        facingDirection *= -1;
+        isFacingRight = !isFacingRight;
+        transform.Rotate(0f, 180f, 0f);
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(groundCheck.position, boxSize * 2);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(feetPos.position, groundcheckSize * 2 );
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(wallCheck.position, wallcheckSize * 2);
     }
 }
+
