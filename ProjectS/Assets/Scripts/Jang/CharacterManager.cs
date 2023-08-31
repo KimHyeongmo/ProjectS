@@ -44,7 +44,7 @@ public class CharacterManager : MonoBehaviour
                     {
                         target.hp -= 1;
                         Debug.Log(c.name);
-                        Debug.Log("damage");
+                        Debug.Log("Player : Attack!");
                     }
                 }
                 curTime = coolTime;

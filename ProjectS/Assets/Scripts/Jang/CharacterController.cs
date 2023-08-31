@@ -35,12 +35,12 @@ public class CharacterController : Entity
     private bool isFancingRight = true;
     private float wallSlidingSpeed;
     private bool isWallSliding;
-    /* int Player_hp;
+    int Player_hp;
 
      private void Start()
      {
          Player_hp = this.hp;
-     }*/
+     }
 
     void Awake()
     {
@@ -51,31 +51,32 @@ public class CharacterController : Entity
     {
         horizontal = Input.GetAxisRaw("Horizontal");
 
-        if (Input.GetButtonDown("Jump") && IsGrounded())
+        if (Input.GetKeyDown(KeyCode.Space) && (IsGrounded()||isWallSliding))
         {
             rigid.velocity = new Vector3(rigid.velocity.x, JumpForce);
         }
 
-        if (Input.GetButtonUp("Jump") && rigid.velocity.y > 0f)
+        if (Input.GetKeyUp(KeyCode.Space) && rigid.velocity.y > 0f)
         {
             rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * 0.5f);
         }
 
         WallSlide();
 
-        /*
+        
         if(Player_hp > this.hp)
         {
             Debug.Log("Player got damaged");
-            Ondamaged();
+            //Ondamaged();
         }
         if(this. hp <= 0)
         {
-            Debug.Log("Dead");
+            Debug.Log("Player Dead");
+            Destroy(gameObject);
         }
 
         Player_hp = this.hp;
-        */
+        
 
 
     }
@@ -153,11 +154,12 @@ public class CharacterController : Entity
 
     private bool IsWalled()
     {
-        if(rigid.velocity.y < 0f)
+        if(rigid.velocity.y <= 0f)
         {
-            Debug.DrawRay(rigid.position, Vector3.down, new Color(0, 1 ,0));
+            //Debug.DrawRay(transform.position, Vector3.right * horizontal, Color.yellow);
+            Debug.DrawRay(transform.position, Vector3.right * -0.7f * horizontal, Color.yellow);
             RaycastHit rayHit;
-            if (Physics.Raycast(rigid.position, Vector3.down, out rayHit, 1, wallLayer))
+            if (Physics.Raycast(transform.position, Vector3.right * -0.7f * horizontal, out rayHit, 1, wallLayer))
             {
                 return true;
             }
@@ -167,7 +169,7 @@ public class CharacterController : Entity
 
     private void WallSlide()
     {
-        if(IsWalled() && !IsGrounded() && horizontal != 0f)
+        if(IsWalled() && !IsGrounded())
         {
             isWallSliding = true;
             rigid.velocity = new Vector3(rigid.velocity.x, -wallSlidingSpeed);

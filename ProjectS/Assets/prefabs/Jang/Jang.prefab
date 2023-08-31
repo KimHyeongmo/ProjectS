@@ -442,7 +442,7 @@ GameObject:
   - component: {fileID: 460469933}
   - component: {fileID: 460469932}
   - component: {fileID: 460469931}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Wall(1) (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -457,7 +457,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460469929}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 40, y: 8, z: 0}
+  m_LocalPosition: {x: -21.1, y: 8, z: 0}
   m_LocalScale: {x: 1, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -637,6 +637,7 @@ GameObject:
   - component: {fileID: 795693412}
   - component: {fileID: 795693411}
   - component: {fileID: 795693410}
+  - component: {fileID: 3851955703016029977}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -723,6 +724,22 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3851955703016029977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795693408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5fbab481ad02d749ba386af362c74b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 10
+  damage: 1
+  attacked: 1
+  speed: 0
 --- !u!1 &945468754
 GameObject:
   m_ObjectHideFlags: 0
@@ -1129,7 +1146,7 @@ GameObject:
   - component: {fileID: 1164168052}
   - component: {fileID: 1164168051}
   - component: {fileID: 1164168050}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Wall  (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1144,7 +1161,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1164168048}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 45, y: 5.5, z: 0}
+  m_LocalPosition: {x: -27.4, y: 5.5, z: 0}
   m_LocalScale: {x: 1, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1329,7 +1346,7 @@ GameObject:
   - component: {fileID: 1593915389}
   - component: {fileID: 1593915388}
   - component: {fileID: 1593915387}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Wall(1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1524,7 +1541,7 @@ GameObject:
   - component: {fileID: 1713076237}
   - component: {fileID: 1713076236}
   - component: {fileID: 1713076235}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: 'Wall '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1823,11 +1840,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb6828b2e7f95bd43a9f8379656c4471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 3
+  hp: 6
   damage: 1
   attacked: 0
   MaxSpeed: 15
-  JumpForce: 0
+  JumpForce: 10
   groundCheck: {fileID: 4378502580500849946}
   boxSize: {x: 0.3, y: 0.95, z: 0.3}
   groundLayer:

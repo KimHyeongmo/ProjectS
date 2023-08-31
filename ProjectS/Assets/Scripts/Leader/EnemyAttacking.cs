@@ -16,11 +16,19 @@ public class EnemyAttacking : MonoBehaviour
     {
         Entity target = user.gameObject.GetComponent<Entity>();
 
+        if(user.transform.CompareTag("Player"))
+        {
+            target.hp -= enemy.damage;
+            Debug.Log("Enemy : Attack!!");
+        }
+
+        /*
         if(target != null)
         {
             target.hp -= enemy.damage;
             Debug.Log("Attack!!");
         }
+        */
 
     }
 }

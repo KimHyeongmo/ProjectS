@@ -12,7 +12,7 @@ public class SpikeTrap : Structure
         {
             AttackedPlayer = collision.gameObject.GetComponent<Entity>();
             AttackedPlayer.hp -= 1;
-            Debug.Log("Hp decreases.");
+            Debug.Log("Spike : Attack!");
         }
     }
 

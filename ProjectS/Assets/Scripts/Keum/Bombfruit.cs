@@ -2,14 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bombfruit : Structure
+public class Bombfruit : Enemy
 {
     public GameObject BombTrap;
     public Entity AttackedPlayer;
-    void Start()
-    {
-       
-    }
+
 
     void FixedUpdate()
     {
@@ -21,7 +18,7 @@ public class Bombfruit : Structure
         {
             AttackedPlayer = collision.gameObject.GetComponent<Entity>();
             AttackedPlayer.hp -= 1;
-            Debug.Log("Attacked");
+            Debug.Log("Bomb : Attack!");
         }
         Destroy(gameObject);//일단은 낙하하는 폭탄은 어떤 물체에 닿을 경우 알아서 사라지게 한다.
     }

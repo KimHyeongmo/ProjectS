@@ -255,6 +255,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1465732339283775548, guid: 99f5d93861fd9984fb6ade52e41ab58f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.35
+      objectReference: {fileID: 0}
     - target: {fileID: 1760338948746917057, guid: 99f5d93861fd9984fb6ade52e41ab58f, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -308,12 +312,20 @@ PrefabInstance:
       value: Jang (1)
       objectReference: {fileID: 0}
     - target: {fileID: 6791722115293742083, guid: 99f5d93861fd9984fb6ade52e41ab58f, type: 3}
+      propertyPath: JumpForce
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6791722115293742083, guid: 99f5d93861fd9984fb6ade52e41ab58f, type: 3}
       propertyPath: wallLayer.m_Bits
       value: 4096
       objectReference: {fileID: 0}
     - target: {fileID: 6791722115293742083, guid: 99f5d93861fd9984fb6ade52e41ab58f, type: 3}
       propertyPath: groundLayer.m_Bits
       value: 2048
+      objectReference: {fileID: 0}
+    - target: {fileID: 8264038973163071530, guid: 99f5d93861fd9984fb6ade52e41ab58f, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99f5d93861fd9984fb6ade52e41ab58f, type: 3}
